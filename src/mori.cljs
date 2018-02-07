@@ -1,11 +1,19 @@
 (ns mori
   (:require-macros
-   [mori.macros :refer [mori-export]])
+   [mori.macros :refer [mori-export]]
+   )
+   (:require [cljs.js :as cljs :refer [js-eval eval-str empty-state]])
   (:refer-clojure :exclude
    [count empty conj find nth assoc dissoc disj pop peek get
     empty? reverse into merge subvec keys vals
     equiv sort sort-by
     vector vec array-map hash-map set compare]))
+
+(def my-state (empty-state))
+
+;; From https://github.com/viebel/klipse/wiki/How-to-run-a-clojurescript-REPL#playing-with-self-hosted-clojurescript
+(defn ^:export eval_str [s]
+  (cljs.js/eval-str (cljs.js/empty-state) s "dontcare" {:eval cljs.js/js-eval} cljs.core/identity))
 
 (mori-export count cljs.core/count)
 (mori-export empty cljs.core/empty)
